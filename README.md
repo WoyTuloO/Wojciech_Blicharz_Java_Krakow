@@ -17,14 +17,18 @@
 
 ## Running
 
-The FAT-JAR file is located at 
+The FAT-JAR file is located in 
+```
+project's main directory
+```
+or at 
 ```
 Wojciech_Blicharz_Java_Krakow\out\artifacts\order_discount_algo_jar\order-discount-algo.jar
 ```
 
 Execute the JAR with two arguments pointing to your JSON files:
 ```bash
-java -jar order-discount-algo.jar path/to/orders.json path/to/payments.json
+java -jar app.jar path/to/orders.json path/to/payments.json
 ```
 
 The program will output the optimal payment breakdown and the total amount spent.
