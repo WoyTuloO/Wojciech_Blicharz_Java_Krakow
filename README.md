@@ -19,7 +19,7 @@
 
 The FAT-JAR file is located in 
 ```
-project's main directory
+Wojciech_Blicharz_Java_Krakow\app.jar
 ```
 or at 
 ```
