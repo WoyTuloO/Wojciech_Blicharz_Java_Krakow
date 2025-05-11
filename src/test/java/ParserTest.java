@@ -1,7 +1,6 @@
-package org.example.Parser;
-
 import org.example.Models.Order;
 import org.example.Models.PaymentMethod;
+import org.example.Parser.JsonParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
