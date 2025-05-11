@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    static List<Order> orders;
-    static List<TotalPayment> allSolutions;
+    public static List<Order> orders;
+    public static List<TotalPayment> allSolutions;
     public static void main(String[] args) throws IOException {
         String ordersPath = args[0];
         String paymentsPath = args[1];
@@ -19,7 +19,6 @@ public class Main {
 
 
         System.out.println(calculateBest());
-
     }
 
     public static TotalPayment calculateBest(){
@@ -36,9 +35,7 @@ public class Main {
     }
 
 
-    public static void backtracking(int orderIdx,
-                                    Map<String, PaymentMethod> methods,
-                                    List<TotalPayment> current) {
+    public static void backtracking(int orderIdx, Map<String, PaymentMethod> methods, List<TotalPayment> current) {
 
         if (orderIdx == orders.size()) {
             HashMap<String, Double> out = new HashMap<>();
@@ -55,6 +52,7 @@ public class Main {
         }
 
         Order order = orders.get(orderIdx);
+
         double orderVal = order.getValue();
         TotalPayment totalPayment = new TotalPayment(new HashMap<>());
         current.add(totalPayment);
@@ -62,7 +60,7 @@ public class Main {
         PaymentMethod points = methods.get("PUNKTY");
 
         if (points != null) {
-            double fullPointsPay = orderVal * (1 - points.getDiscount() / 100.0);
+            double fullPointsPay = orderVal * (1 - (points.getDiscount() / 100.0));
             if (points.getLimit() >= fullPointsPay) {
                 totalPayment.put("PUNKTY", fullPointsPay);
                 double oldPtsLimit = points.getLimit();
@@ -77,9 +75,10 @@ public class Main {
 
         for (PaymentMethod card : methods.values()) {
             if ("PUNKTY".equals(card.getId())) continue;
-            boolean promo = order.getPromotions().contains(card.getId());
-            double frac = promo ? card.getDiscount() / 100.0 : 0.0;
-            double fullCardPay = orderVal * (1 - frac);
+
+            boolean isPromo = order.getPromotions().contains(card.getId());
+            double discountFraction = isPromo ? card.getDiscount() / 100.0 : 0.0;
+            double fullCardPay = orderVal * (1 - discountFraction);
 
             if (card.getLimit() >= fullCardPay) {
                 totalPayment.put(card.getId(), fullCardPay);
@@ -93,33 +92,29 @@ public class Main {
             }
         }
         double threshold = orderVal * 0.10;
-        if (points != null
-                && points.getLimit() >= threshold
-                && points.getLimit() < orderVal) {
+        if (points != null && points.getLimit() >= threshold && points.getLimit() < orderVal) {
 
             double discountedTotal = orderVal * 0.90;
-
             double oldPtsLimit = points.getLimit();
             double ptsPortion = Math.min(oldPtsLimit, discountedTotal);
 
             totalPayment.put("PUNKTY", ptsPortion);
             points.setLimit(oldPtsLimit - ptsPortion);
 
-            double restToPay = discountedTotal - ptsPortion;
+            double toPay = discountedTotal - ptsPortion;
             for (PaymentMethod card : methods.values()) {
                 if ("PUNKTY".equals(card.getId())) continue;
-                if (card.getLimit() >= restToPay) {
+                if (card.getLimit() >= toPay) {
                     double oldCardLimit = card.getLimit();
-                    totalPayment.put(card.getId(), restToPay);
-                    card.setLimit(oldCardLimit - restToPay);
+                    totalPayment.put(card.getId(),toPay);
+                    card.setLimit(oldCardLimit - toPay);
 
-                    backtracking(orderIdx + 1, methods, current);
+                    backtracking(orderIdx + 1,methods, current);
 
                     card.setLimit(oldCardLimit);
                     totalPayment.getMap().remove(card.getId());
                 }
             }
-
             points.setLimit(oldPtsLimit);
             totalPayment.getMap().remove("PUNKTY");
         }
