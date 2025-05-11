@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Models;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 @Data
 public class TotalPayment {
-    HashMap<String, Double> map;
+    public HashMap<String, Double> map;
 
     public TotalPayment(HashMap<String, Double> totalPayments) {
         this.map = new HashMap<>(totalPayments);

@@ -1,7 +1,9 @@
-package org.example;
+package org.example.Parser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.Models.Order;
+import org.example.Models.PaymentMethod;
 
 import java.io.File;
 import java.io.IOException;
